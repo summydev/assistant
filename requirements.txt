@@ -1,18 +1,30 @@
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
+
+# Pydantic ecosystem
 pydantic==2.9.2
 pydantic-core==2.23.4
 
-
+# File upload support
 python-multipart==0.0.6
+
+# Google API + Generative AI
 google-generativeai==0.3.2
 google-auth==2.23.4
 google-auth-oauthlib==1.1.0
 google-auth-httplib2==0.2.0
 google-api-python-client==2.110.0
+
+# Utility libraries
 rapidfuzz==3.5.2
-pydub==0.25.1
-spitch==1.0.0
 dateparser==1.2.0
 pytz==2023.3
 requests==2.31.0
+
+# Audio handling
+pydub==0.25.1
+pyaudio==0.2.14  # ✅ only needed if you record/play audio streams
+
+# Speech / Voice API
+spitch==1.0.0
+#

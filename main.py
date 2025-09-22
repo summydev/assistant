@@ -11,7 +11,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from rapidfuzz import fuzz, process
 import io
+import sys
+import types
+
+# Temporary fix for Python 3.13 (no pyaudioop module)
+if sys.version_info >= (3, 13):
+    sys.modules["pyaudioop"] = types.ModuleType("pyaudioop")
+
 from pydub import AudioSegment
+
 
 import google.generativeai as genai
 from google.oauth2.credentials import Credentials
