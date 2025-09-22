@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voice Agent</title>
+</head>
+<body>
+  <h2>🎤 Voice Agent</h2>
+  <button id="startBtn">Start Talking</button>
+  <p id="transcript"></p>
+  <p id="reply"></p>
+  <audio id="ttsAudio" controls></audio>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const transcriptEl = document.getElementById("transcript");
+    const replyEl = document.getElementById("reply");
+    const audioEl = document.getElementById("ttsAudio");
+
+    const recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+
+    recognition.onresult = async (event) => {
+      const text = event.results[0][0].transcript;
+      transcriptEl.textContent = "You said: " + text;
+
+      replyEl.textContent = "🤖 Processing...";
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/agent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text })
+        });
+
+        const data = await res.json();
+        console.log("NLU:", data.nlu);
+
+        replyEl.textContent = "Agent: " + data.reply;
+
+        // Play TTS audio
+        const audioSrc = "data:audio/mp3;base64," + data.tts_audio;
+        audioEl.src = audioSrc;
+        audioEl.play();
+      } catch (err) {
+        replyEl.textContent = "⚠️ Error contacting agent.";
+        console.error(err);
+      }
+    };
+
+    startBtn.onclick = () => {
+      recognition.start();
+      setTimeout(() => recognition.stop(), 5000); // Stop after 5 sec
+    };
+  </script>
+</body>
+</html>
